@@ -1,24 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Sidebar from './components/sidebar';
+import TileList from './components/tile-list';
+import { BWH } from './shared/bwh';
+import { ColorsByProp } from './shared/field';
+import { ColorCount } from './shared/rgb';
 
 function App() {
+
+  const [map, setMap] = useState<BWH>();
+  const [expectedProp, setExpectedProp] = useState<string>('day_fog');
+  const [colors, setColors] = useState<ColorCount[]>([]);
+  const [colorsByProp, setColorsByProp] = useState<ColorsByProp>({} as ColorsByProp);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Sidebar
+        setMap={setMap} map={map}
+        expectedProp={expectedProp} setExpectedProp={setExpectedProp}
+        colors={colors} setColors={setColors}
+        colorsByProp={colorsByProp} setColorsByProp={setColorsByProp} />
+      <TileList setMap={setMap} map={map} expectedProp={expectedProp} colors={colors} />
     </div>
   );
 }

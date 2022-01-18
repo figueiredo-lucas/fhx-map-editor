@@ -1,0 +1,10 @@
+.tile-list {
+  display: flex;
+  gap: 1px;
+  flex-wrap: wrap;
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
