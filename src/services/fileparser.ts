@@ -11,7 +11,7 @@ export class FileParser {
     bwhFile.filename = filename;
     bwhFile.size = size;
     let position = 0;
-    bwhFile.header = buffer.toString('utf-8', position, 7);
+    bwhFile.header = buffer.toString('ascii', position, 7);
     position += 7;
     bwhFile.version = buffer.readInt32LE(position);
     position += 4;
@@ -61,7 +61,7 @@ export class FileParser {
   generate(bwhFile: BWH) {
     const buff = Buffer.alloc(bwhFile.size);
     let position = 0;
-    buff.write(bwhFile.header, position, 7, 'utf-8');
+    buff.write(bwhFile.header, position, 7, 'ascii');
     position += 7;
     buff.writeInt32LE(bwhFile.version, position);
     position += 4;
@@ -122,7 +122,7 @@ export class FileParser {
   private parseZoneFromBuffer(bwhFile: BWH, buff: Buffer, position: number): number {
     bwhFile.zone = bwhFile.zone || [];
     const zone: Field = {} as Field;
-    zone.name = buff.toString('utf-8', position, position + 20);
+    zone.name = buff.toString('ascii', position, position + 20);
     position += 20;
     zone.is_active = buff.readInt8(position);
     position += 1;
@@ -171,13 +171,13 @@ export class FileParser {
     bwhFile.music.push(ogg);
     ogg.name_length = buff.readInt32LE(position);
     position += 4;
-    ogg.name = buff.toString('utf-8', position, position + ogg.name_length);
+    ogg.name = buff.toString('ascii', position, position + ogg.name_length);
     position += ogg.name_length;
-    ogg.unk = buff.toString('utf-8', position, position + 7);
+    ogg.unk = buff.toString('hex', position, position + 7);
     position += 7;
     ogg.path_length = buff.readInt32LE(position);
     position += 4;
-    ogg.path = buff.toString('utf-8', position, position + ogg.path_length);
+    ogg.path = buff.toString('ascii', position, position + ogg.path_length);
     position += ogg.path_length;
     return position;
   }
@@ -194,7 +194,7 @@ export class FileParser {
   }
 
   private parseZoneFromObject(zone: Field, buff: Buffer, position: number): number {
-    buff.write(zone.name, position, position + 20, 'utf-8');
+    buff.write(zone.name.split('\0')[0], position, position + 20, 'ascii');
     position += 20;
     buff.writeInt8(zone.is_active, position);
     position += 1;
@@ -227,13 +227,13 @@ export class FileParser {
   private parseOggFromObject(music: Ogg, buff: Buffer, position: number): number {
     buff.writeInt32LE(music.name_length, position);
     position += 4;
-    buff.write(music.name, position, position + music.name_length, 'utf-8');
+    buff.write(music.name, position, position + music.name_length, 'ascii');
     position += music.name_length;
-    buff.write(music.unk, position, position + 7, 'utf-8');
+    buff.write(music.unk, position, position + 7, 'hex');
     position += 7;
     buff.writeInt32LE(music.path_length, position);
     position += 4;
-    buff.write(music.path, position, position + music.path_length, 'utf-8');
+    buff.write(music.path, position, position + music.path_length, 'ascii');
     position += music.path_length;
     return position;
   }
